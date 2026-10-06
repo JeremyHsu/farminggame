@@ -1,0 +1,208 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  background: #23301f;
+  background-image: radial-gradient(circle at 50% 20%, #3a4f30, #1d2818);
+  display: flex; align-items: center; justify-content: center;
+  font-family: "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", sans-serif;
+  color: #3a2a1a;
+  min-height: 100vh;
+}
+#game-wrap {
+  position: relative;
+  width: 800px; height: 576px;
+  box-shadow: 0 12px 48px rgba(0,0,0,.55);
+  border-radius: 10px;
+  overflow: hidden;
+}
+canvas { display: block; image-rendering: pixelated; background: #63a848; }
+.hidden { display: none !important; }
+small { color: #a07a4a; }
+
+/* ===== 頂部 HUD ===== */
+#hud-top {
+  position: absolute; top: 0; left: 0; right: 0;
+  display: flex; gap: 8px; align-items: center;
+  padding: 8px 10px;
+  pointer-events: none;
+}
+.hud-item {
+  background: rgba(40,26,14,.78);
+  color: #ffe8c0;
+  border: 2px solid rgba(255,220,160,.35);
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+#energy-wrap { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+#energy-outer {
+  width: 110px; height: 12px;
+  background: #3a2a1a;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(255,220,160,.4);
+}
+#energy-bar { height: 100%; width: 100%; background: #6fd05f; transition: width .2s; }
+
+/* ===== 互動提示 ===== */
+#interact-hint {
+  position: absolute; bottom: 122px; left: 50%; transform: translateX(-50%);
+  background: rgba(20,40,70,.9);
+  color: #d8e8ff;
+  border: 2px solid rgba(150,200,255,.55);
+  border-radius: 8px;
+  padding: 5px 16px;
+  font-size: 14px;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 4;
+}
+#interact-hint.pop { animation: hintPop .35s; }
+@keyframes hintPop {
+  0%   { transform: translateX(-50%) scale(.7); opacity: 0; }
+  100% { transform: translateX(-50%) scale(1); opacity: 1; }
+}
+
+/* HUD 說明按鈕 */
+#btn-help-hud {
+  pointer-events: auto;
+  background: rgba(40,26,14,.78);
+  color: #ffe8c0;
+  border: 2px solid rgba(255,220,160,.35);
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: inherit;
+}
+#btn-help-hud:hover { background: rgba(90,60,20,.92); border-color: #ffd050; }
+
+/* ===== 工具操作提示 ===== */
+#tool-hint {
+  position: absolute; bottom: 82px; left: 50%; transform: translateX(-50%);
+  background: rgba(40,26,14,.85);
+  color: #ffe8c0;
+  border: 2px solid rgba(255,220,160,.35);
+  border-radius: 8px;
+  padding: 5px 16px;
+  font-size: 14px;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 4;
+}
+#tool-hint.flash { animation: hintFlash .5s; }
+@keyframes hintFlash {
+  0%   { background: #ffd050; color: #3a2a1a; transform: translateX(-50%) scale(1.12); }
+  100% { background: rgba(40,26,14,.85); color: #ffe8c0; transform: translateX(-50%) scale(1); }
+}
+
+/* ===== 工具列 ===== */
+#toolbelt {
+  position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 6px;
+}
+.slot {
+  width: 78px; padding: 5px 2px 4px;
+  background: rgba(40,26,14,.8);
+  border: 2px solid rgba(255,220,160,.3);
+  border-radius: 8px;
+  color: #ffe8c0;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+}
+.slot.sel {
+  border-color: #ffd050;
+  background: rgba(90,60,20,.92);
+  box-shadow: 0 0 10px rgba(255,208,80,.5);
+}
+.slot-key { position: absolute; top: 2px; left: 5px; font-size: 10px; opacity: .7; }
+.slot-icon { font-size: 20px; display: block; line-height: 1.15; }
+.slot-name { font-size: 12px; display: block; }
+.slot-sub { font-size: 10px; display: block; color: #ffd890; min-height: 13px; }
+
+/* ===== 提示訊息 ===== */
+#toasts {
+  position: absolute; left: 10px; bottom: 88px;
+  display: flex; flex-direction: column; gap: 6px;
+  pointer-events: none;
+  max-width: 380px;
+  z-index: 5;
+}
+.toast {
+  background: rgba(30,40,24,.88);
+  color: #e8ffd8;
+  border-left: 4px solid #8fd04f;
+  padding: 7px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  opacity: 0; transform: translateX(-12px);
+  transition: all .3s;
+}
+.toast.show { opacity: 1; transform: none; }
+
+/* ===== 視窗 ===== */
+.modal {
+  position: absolute; inset: 0;
+  background: rgba(10,14,8,.55);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 10;
+}
+.panel {
+  background: #f4e8cc;
+  border: 4px solid #8a5a32;
+  border-radius: 12px;
+  padding: 22px 26px;
+  min-width: 320px;
+  max-width: 560px;
+  max-height: 510px;
+  overflow-y: auto;
+  box-shadow: 0 8px 30px rgba(0,0,0,.4);
+  text-align: center;
+}
+.panel.wide { width: 520px; }
+.panel h1 { color: #7a4a20; font-size: 34px; letter-spacing: 4px; }
+.panel h2 { color: #7a4a20; margin-bottom: 8px; }
+.subtitle { color: #a07a4a; margin: 4px 0 16px; }
+.hint { margin-top: 14px; font-size: 12px; color: #a07a4a; line-height: 1.7; }
+.btn-col { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+.btn-row { display: flex; gap: 10px; justify-content: center; margin-top: 14px; }
+.btn {
+  font-family: inherit;
+  background: #8a5a32; color: #ffe8c0;
+  border: 2px solid #5a3a1e;
+  border-radius: 8px;
+  padding: 9px 22px;
+  font-size: 15px;
+  cursor: pointer;
+  min-width: 130px;
+}
+.btn:hover { background: #a06b3f; }
+.btn.primary { background: #4f8c3a; border-color: #2f5c22; }
+.btn.primary:hover { background: #63a848; }
+.btn.small { min-width: 0; padding: 4px 12px; font-size: 13px; }
+.btn:disabled { opacity: .45; cursor: default; }
+#dialog-msg { font-size: 16px; line-height: 1.6; }
+
+/* ===== 商店／出貨列表 ===== */
+.shop-money { color: #7a4a20; font-weight: bold; margin-bottom: 8px; }
+.shop-section { color: #7a4a20; font-size: 15px; margin: 12px 0 6px; text-align: left; }
+.item-list { display: flex; flex-direction: column; gap: 6px; text-align: left; }
+.item-row {
+  display: flex; align-items: center; gap: 8px;
+  background: #e8d8b0;
+  border: 2px solid #c8a878;
+  border-radius: 8px;
+  padding: 7px 10px;
+  font-size: 14px;
+}
+.item-name { flex: 1; font-weight: bold; }
+.item-info { color: #7a5a3a; font-size: 13px; }
+.item-btns { display: flex; gap: 6px; }
+.badge { font-size: 12px; }
+.empty { color: #a07a4a; padding: 12px; text-align: center; }
+#help-body { text-align: left; font-size: 14px; line-height: 1.9; }
+#help-body hr { border: none; border-top: 2px dashed #c8a878; margin: 8px 0; }
+.title-panel { background: rgba(244,232,204,.96); }

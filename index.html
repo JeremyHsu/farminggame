@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>悠閒牧場物語</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="game-wrap">
+  <canvas id="game" width="800" height="576"></canvas>
+
+  <!-- 上方狀態列 -->
+  <div id="hud-top" class="hidden">
+    <span class="hud-item" id="hud-date">第1年 春 1日</span>
+    <span class="hud-item" id="hud-time">06:00</span>
+    <span class="hud-item" id="hud-weather">☀</span>
+    <span class="hud-item" id="hud-money">500G</span>
+    <div class="hud-item" id="energy-wrap" title="體力">
+      <span>體力</span>
+      <div id="energy-outer"><div id="energy-bar"></div></div>
+    </div>
+    <button id="btn-help-hud" title="操作說明（H）">❓ 操作</button>
+  </div>
+
+  <!-- 互動提示（接近門口/商店/出貨箱/小雞時顯示） -->
+  <div id="interact-hint" class="hidden"></div>
+
+  <!-- 工具操作提示 -->
+  <div id="tool-hint" class="hidden"></div>
+
+  <!-- 下方工具列 -->
+  <div id="toolbelt" class="hidden"></div>
+
+  <!-- 提示訊息 -->
+  <div id="toasts"></div>
+
+  <!-- 標題畫面 -->
+  <div id="modal-title" class="modal">
+    <div class="panel title-panel">
+      <h1>悠閒牧場物語</h1>
+      <p class="subtitle">～ 我的小小農場 ～</p>
+      <div class="btn-col">
+        <button id="btn-continue" class="btn hidden">繼續遊戲</button>
+        <button id="btn-new" class="btn primary">開始新遊戲</button>
+        <button id="btn-help" class="btn">操作說明</button>
+      </div>
+      <p class="hint">種田、養雞、賺錢，過上悠閒的牧場生活吧！<br>（步調輕快版：現實 1 分鐘 ＝ 遊戲 1 天）</p>
+    </div>
+  </div>
+
+  <!-- 通用對話框 -->
+  <div id="modal-dialog" class="modal hidden">
+    <div class="panel">
+      <p id="dialog-msg"></p>
+      <div class="btn-row" id="dialog-btns"></div>
+    </div>
+  </div>
+
+  <!-- 商店 -->
+  <div id="modal-shop" class="modal hidden">
+    <div class="panel wide">
+      <h2>🏪 商店</h2>
+      <p class="shop-money" id="shop-money"></p>
+      <h3 class="shop-section">🐾 寵物（每種限養一隻）</h3>
+      <div id="shop-pets" class="item-list"></div>
+      <h3 class="shop-section">🌱 種子</h3>
+      <div id="shop-list" class="item-list"></div>
+      <div class="btn-row"><button class="btn" id="btn-shop-close">離開</button></div>
+    </div>
+  </div>
+
+  <!-- 出貨箱 -->
+  <div id="modal-ship" class="modal hidden">
+    <div class="panel wide">
+      <h2>📦 出貨箱</h2>
+      <p class="shop-money" id="ship-money"></p>
+      <div id="ship-list" class="item-list"></div>
+      <div class="btn-row"><button class="btn" id="btn-ship-close">離開</button></div>
+    </div>
+  </div>
+
+  <!-- 操作說明 -->
+  <div id="modal-help" class="modal hidden">
+    <div class="panel wide">
+      <h2>❓ 操作說明</h2>
+      <div id="help-body">
+        <p>🚶 <b>移動</b>：WASD 或 方向鍵</p>
+        <p>🛠 <b>使用工具</b>：空白鍵（對面前反白的格子使用）</p>
+        <p>💬 <b>互動</b>：E（家門睡覺／出貨箱賣東西／商店買種子・寵物／摸摸小動物）</p>
+        <p>🔢 <b>選擇工具</b>：數字鍵 1～5　　🌱 <b>切換種子</b>：Q</p>
+        <p>🔊 <b>音效開關</b>：M　　❓ <b>本說明</b>：H　　✖ <b>關閉視窗</b>：Esc</p>
+        <hr>
+        <p>📖 <b>玩法</b>：鋤頭翻土 → 播種 → 每天澆水 → 成熟後用「手」採收 → 拿到出貨箱賣錢！</p>
+        <p>🛏 在<b>家門口</b>按 E 睡覺：進入下一天、體力全滿並<b>自動存檔</b>。熬夜到凌晨 2 點會累倒，隔天體力只有一半！</p>
+        <p>🌸 作物有季節性，不合季節會枯萎；🌧 下雨天作物自動澆水！</p>
+        <p>🐔 小雞早上可能會下蛋，走過去就能撿起來賣錢。</p>
+        <p>🐶🐱 商店可以買寵物狗／寵物貓，牠們會在牧場四處散步，靠近按 E 摸摸牠們！</p>
+        <p>🍅 番茄、玉米、茄子採收後還會再長出來，可以連續收成！</p>
+      </div>
+      <div class="btn-row"><button class="btn" id="btn-help-close">關閉</button></div>
+    </div>
+  </div>
+</div>
+
+<script src="js/audio.js"></script>
+<script src="js/data.js"></script>
+<script src="js/sprites.js"></script>
+<script src="js/game.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
